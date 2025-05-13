@@ -1,0 +1,51 @@
+# Build e arquivos relacionados
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+
+# Configurações locais do usuário
+*.userprefs
+*.user
+*.suo
+*.vscode/
+*.swp
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Arquivos de backup
+*.bak
+*.tmp
+*.log
+
+# Configurações de IDE
+.vs/
+.idea/
+.project
+.settings/
+
+# Arquivos gerados pelo MAUI
+AppPackages/
+BundleArtifacts/
+DeviceSets/
+*.ipa
+*.apk
+*.aab
+
+# Arquivos de cache
+.cache/
+*.lock
+*.csproj.nuget.g.props
+*.csproj.nuget.g.targets
+
+# Arquivos de teste
+TestResults/
+
+# Outros
+*.nupkg
+*.snupkg
