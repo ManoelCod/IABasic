@@ -36,10 +36,16 @@ class SimplesIA
     static void Main()
     {
         SimplesIA ia = new SimplesIA();
-        Console.WriteLine("Digite sua pergunta:");
-        string entrada = Console.ReadLine();
+        while (true)
+        {
+            Console.WriteLine("Digite sua pergunta (ou digite 'sair' para encerrar):");
+            string entrada = Console.ReadLine();
 
-        string resposta = ia.Pesquisar(entrada);
-        Console.WriteLine(resposta);
+            if (entrada?.Trim().ToLower() == "sair")
+                break;
+
+            string resposta = ia.Pesquisar(entrada);
+            Console.WriteLine(resposta);
+        }
     }
 }
