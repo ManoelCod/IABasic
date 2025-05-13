@@ -20,17 +20,54 @@ class SimplesIA
 
     public string Pesquisar(string consulta)
     {
-        // Encontrar a melhor correspondência na base de dados
         var resultado = baseDeDados.Keys
-            .OrderBy(pergunta => CalcularSimilaridade(pergunta, consulta))
-            .LastOrDefault();
+            .OrderBy(pergunta => CalcularDistanciaLevenshtein(pergunta, consulta))
+            .FirstOrDefault();
 
-        return resultado != null ? baseDeDados[resultado] : "Não encontrei uma resposta. Você pode adicionar uma nova pergunta e resposta?";
+        if (resultado != null && CalcularDistanciaLevenshtein(resultado, consulta) < consulta.Length / 2) // Ajuste para definir um limiar de similaridade
+        {
+            return baseDeDados[resultado];
+        }
+        else
+        {
+            return null; // Não encontrou resposta
+        }
     }
 
-    private int CalcularSimilaridade(string a, string b)
+    public void AdicionarPergunta(string pergunta, string resposta)
     {
-        return a.Intersect(b).Count(); // Simples métrica de similaridade
+        if (!baseDeDados.ContainsKey(pergunta))
+        {
+            baseDeDados.Add(pergunta, resposta);
+            Console.WriteLine("Pergunta e resposta adicionadas à base de conhecimento!");
+        }
+        else
+        {
+            Console.WriteLine("Essa pergunta já existe na base de conhecimento.");
+        }
+    }
+
+    private int CalcularDistanciaLevenshtein(string a, string b)
+    {
+        int[,] distancias = new int[a.Length + 1, b.Length + 1];
+
+        for (int i = 0; i <= a.Length; i++)
+            distancias[i, 0] = i;
+        for (int j = 0; j <= b.Length; j++)
+            distancias[0, j] = j;
+
+        for (int i = 1; i <= a.Length; i++)
+        {
+            for (int j = 1; j <= b.Length; j++)
+            {
+                int custo = (a[i - 1] == b[j - 1]) ? 0 : 1;
+                distancias[i, j] = Math.Min(
+                    Math.Min(distancias[i - 1, j] + 1, distancias[i, j - 1] + 1),
+                    distancias[i - 1, j - 1] + custo);
+            }
+        }
+
+        return distancias[a.Length, b.Length];
     }
 
     static void Main()
@@ -45,7 +82,17 @@ class SimplesIA
                 break;
 
             string resposta = ia.Pesquisar(entrada);
-            Console.WriteLine(resposta);
+
+            if (resposta != null)
+            {
+                Console.WriteLine(resposta);
+            }
+            else
+            {
+                Console.WriteLine("Não encontrei uma resposta. Por favor, digite a resposta para essa pergunta:");
+                string novaResposta = Console.ReadLine();
+                ia.AdicionarPergunta(entrada, novaResposta);
+            }
         }
     }
 }
